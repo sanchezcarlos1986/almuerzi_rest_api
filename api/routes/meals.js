@@ -8,17 +8,18 @@ router.get("/", (req, res, next) => {
     .exec()
     .then((data) => {
       next();
+      console.log("data:", data);
       res.status(200).send(data);
     })
     .catch((err) => console.log(`Error getting meals: ${err}`));
 });
 
-// router.get("/:id", (req, res, next) => {
-//   Meals.findById(req.params.id)
-//     .exec()
-//     .then((data) => res.status(200).send(data))
-//     .catch((err) => console.log(`Error getting 1 meal: ${err}`));
-// });
+router.get("/:id", (req, res, next) => {
+  Meals.findById(req.params.id)
+    .exec()
+    .then((data) => res.status(200).send(data))
+    .catch((err) => console.log(`Error getting 1 meal: ${err}`));
+});
 
 router.post("/", (req, res, next) => {
   Meals.create(req.body)
