@@ -1,13 +1,45 @@
-// const express = require("express");
+const express = require("express");
+const Orders = require("../models/Orders");
 
-// const router = app.router();
+const colorLog = require("../../utils/colorLog");
 
-// router.get("/", (req, res) => {
-//   res.send("get orders!!");
-// });
+const router = express.Router();
 
-// router.post("/", (req, res) => {
-//   res.send("post orders!!");
-// });
+router.get("/", (_, res) => {
+  Orders.find()
+    .then((data) => res.status(200).send(data))
+    .catch((err) => colorLog("error", `Error getting orders: ${err}`));
+});
 
-// module.exports = router;
+router.get("/:id", (req, res) => {
+  Orders.findById(req.params.id)
+    .then((data) => res.status(200).send(data))
+    .catch((err) => colorLog("error", `Error getting 1 order: ${err}`));
+});
+
+router.post("/", (req, res) => {
+  Orders.create(req.body)
+    .then((data) => res.status(201).send(data))
+    .catch((err) => colorLog("error", `Error posting order: ${err}`));
+});
+
+router.put("/:id", (req, res) => {
+  console.log({
+    id: req.params.id,
+    body: req.body,
+  });
+  Orders.findByIdAndUpdate(req.params.id, req.body)
+    .then(() => res.status(204).end())
+    .catch((err) => colorLog("error", `Error updating order: ${err}`));
+});
+
+router.delete("/:id", (req, res) => {
+  Orders.findByIdAndRemove(req.params.id)
+    .then(() => {
+      colorLog("info", `Order id: "${req.params.id}" was deleted`);
+      res.end();
+    })
+    .catch((err) => colorLog("error", `Error deleting order: ${err}`));
+});
+
+module.exports = router;
