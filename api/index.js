@@ -18,7 +18,7 @@ connectDB();
 // Routes
 app.use("/api/meals", meals);
 
-app.get("*", (req, res) => {
+app.get("*", (_, res) => {
   res.send("<h1>Default response</h1>");
 });
 
