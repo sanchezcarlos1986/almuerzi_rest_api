@@ -22,4 +22,13 @@ const isAuthenticated = (req, res, next) => {
   });
 };
 
-module.exports = isAuthenticated;
+const hasRoles = (roles) => (req, res, next) => {
+  if (roles.includes(req.user.role)) return next();
+
+  res.sendStatus(403);
+};
+
+module.exports = {
+  isAuthenticated,
+  hasRoles,
+};

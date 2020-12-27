@@ -7,6 +7,10 @@ const Users = mongoose.model(
     email: String,
     password: String,
     salt: String,
+    role: {
+      type: String,
+      default: "user", // admin
+    },
   })
 );
 

@@ -1,8 +1,10 @@
 const express = require("express");
 const Orders = require("../models/Orders");
-const isAuth = require("../auth");
+const { isAuthenticated, hasRoles } = require("../auth");
 
 const colorLog = require("../../utils/colorLog");
+
+const roles = ["admin", "user"];
 
 const router = express.Router();
 
@@ -18,14 +20,14 @@ router.get("/:id", (req, res) => {
     .catch((err) => colorLog("error", `Error getting 1 order: ${err}`));
 });
 
-router.post("/", isAuth, (req, res) => {
+router.post("/", isAuthenticated, hasRoles(roles), (req, res) => {
   const { _id } = req.user;
   Orders.create({ ...req.body, user_id: _id })
     .then((data) => res.status(201).send(data))
     .catch((err) => colorLog("error", `Error posting order: ${err}`));
 });
 
-router.put("/:id", isAuth, (req, res) => {
+router.put("/:id", isAuthenticated, hasRoles(roles), (req, res) => {
   console.log({
     id: req.params.id,
     body: req.body,
@@ -35,7 +37,7 @@ router.put("/:id", isAuth, (req, res) => {
     .catch((err) => colorLog("error", `Error updating order: ${err}`));
 });
 
-router.delete("/:id", isAuth, (req, res) => {
+router.delete("/:id", isAuthenticated, hasRoles(roles), (req, res) => {
   Orders.findByIdAndRemove(req.params.id)
     .then(() => {
       colorLog("info", `Order id: "${req.params.id}" was deleted`);
