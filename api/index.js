@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const connectDB = require("../services/connectDB");
 const meals = require("./routes/meals");
 const orders = require("./routes/orders");
+const auth = require("./routes/auth");
 
 const app = express();
 
@@ -19,6 +20,7 @@ connectDB();
 // Routes
 app.use("/api/meals", meals);
 app.use("/api/orders", orders);
+app.use("/api/auth", auth);
 
 app.get("*", (_, res) => {
   res.send("<h1>Default response</h1>");
