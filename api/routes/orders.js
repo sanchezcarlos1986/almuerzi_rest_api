@@ -1,5 +1,6 @@
 const express = require("express");
 const Orders = require("../models/Orders");
+const isAuth = require("../auth");
 
 const colorLog = require("../../utils/colorLog");
 
@@ -17,13 +18,14 @@ router.get("/:id", (req, res) => {
     .catch((err) => colorLog("error", `Error getting 1 order: ${err}`));
 });
 
-router.post("/", (req, res) => {
-  Orders.create(req.body)
+router.post("/", isAuth, (req, res) => {
+  const { _id } = req.user;
+  Orders.create({ ...req.body, user_id: _id })
     .then((data) => res.status(201).send(data))
     .catch((err) => colorLog("error", `Error posting order: ${err}`));
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", isAuth, (req, res) => {
   console.log({
     id: req.params.id,
     body: req.body,
@@ -33,7 +35,7 @@ router.put("/:id", (req, res) => {
     .catch((err) => colorLog("error", `Error updating order: ${err}`));
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", isAuth, (req, res) => {
   Orders.findByIdAndRemove(req.params.id)
     .then(() => {
       colorLog("info", `Order id: "${req.params.id}" was deleted`);

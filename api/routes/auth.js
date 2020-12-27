@@ -1,10 +1,17 @@
 const express = require("express");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const Users = require("../models/Users");
 
 const colorLog = require("../../utils/colorLog");
 
 const router = express.Router();
+
+const signToken = (_id) => {
+  return jwt.sign({ _id }, "mi-secreto", {
+    expiresIn: 60 * 60 * 24 * 365,
+  });
+};
 
 router.post("/register", (req, res) => {
   const { email, password } = req.body;
