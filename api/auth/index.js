@@ -3,7 +3,10 @@ const Users = require("../models/Users");
 const colorLog = require("../../utils/colorLog");
 
 const isAuthenticated = (req, res, next) => {
+  colorLog("info", "isAuthenticated: req:", req.headers);
   const token = req.headers.authorization;
+
+  colorLog("info", "isAuthenticated: token:", token);
 
   if (!token) return res.sendStatus(403);
 
@@ -23,6 +26,10 @@ const isAuthenticated = (req, res, next) => {
 };
 
 const hasRoles = (roles) => (req, res, next) => {
+  colorLog("info", "isAuthenticated: roles:", {
+    roles,
+    userRole: req.user.role,
+  });
   if (roles.includes(req.user.role)) return next();
 
   res.sendStatus(403);

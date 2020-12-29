@@ -2,7 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/Users");
-const { isAuthenticated, hasRoles } = require("../auth");
+const { isAuthenticated } = require("../auth");
 const colorLog = require("../../utils/colorLog");
 
 const router = express.Router();
@@ -15,6 +15,10 @@ const signToken = (_id) => {
 
 router.post("/register", (req, res) => {
   const { email, password } = req.body;
+  colorLog("info", "register: user, pass:", {
+    email,
+    password,
+  });
   crypto.randomBytes(16, (err, salt) => {
     const newSalt = salt.toString("base64");
 
@@ -43,6 +47,10 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
+  colorLog("info", "login: user, pass:", {
+    email,
+    password,
+  });
 
   Users.findOne({ email })
     .exec()
